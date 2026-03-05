@@ -1,25 +1,32 @@
-# Configuration file for Voice to OmniCAD
+# Configuration — Voice to OmniCAD
 import os
 
-# xAI Grok API Settings
-# Set your API key via environment variable XAI_API_KEY
-# or paste it here (not recommended for public repos)
-GROK_API_KEY = os.environ.get("XAI_API_KEY", "YOUR_GROK_API_KEY_HERE")
-GROK_API_URL = "https://api.x.ai/v1/chat/completions"
-GROK_MODEL = "grok-2-latest"  # Latest Grok 2 model
+# ── Claude API (primary — you have credits) ─────────────────
+CLAUDE_API_KEY   = os.environ.get("ANTHROPIC_API_KEY", "YOUR_ANTHROPIC_API_KEY_HERE")
+CLAUDE_API_URL   = "https://api.anthropic.com/v1/messages"
+CLAUDE_MODEL     = "claude-opus-4-5"      # best reasoning; swap to claude-haiku-3 for speed
 
-# Voice Settings
-VOICE_LANGUAGE = "en-US"
-VOICE_TIMEOUT = 5  # seconds
-VOICE_PHRASE_TIME_LIMIT = 15  # seconds (increased for longer commands)
+# ── xAI Grok API (fallback) ─────────────────────────────────
+GROK_API_KEY     = os.environ.get("XAI_API_KEY", "YOUR_GROK_API_KEY_HERE")
+GROK_API_URL     = "https://api.x.ai/v1/chat/completions"
+GROK_MODEL       = "grok-3-latest"
 
-# Sacred Geometry Defaults
-DEFAULT_RADIUS = 1.0
+# ── Active backend ───────────────────────────────────────────
+# "claude" | "grok"  — switch here or via env AI_BACKEND
+AI_BACKEND       = os.environ.get("AI_BACKEND", "claude")
+
+# ── Voice ───────────────────────────────────────────────────
+VOICE_LANGUAGE          = "en-US"
+VOICE_TIMEOUT           = 5   # seconds
+VOICE_PHRASE_TIME_LIMIT = 15  # seconds
+
+# ── Sacred geometry defaults ─────────────────────────────────
+DEFAULT_RADIUS  = 1.0
 DEFAULT_SPACING = 3.0
 
-# Safety Settings
-MAX_EXECUTION_TIME = 10  # seconds (increased for complex generations)
-ALLOWED_MODULES = ['bpy', 'math', 'mathutils']
+# ── Safety ──────────────────────────────────────────────────
+MAX_EXECUTION_TIME = 10
+ALLOWED_MODULES    = ['bpy', 'math', 'mathutils']
 
-# Conversation Settings
-MAX_CONVERSATION_HISTORY = 20  # Number of past exchanges to keep for context
+# ── Conversation ────────────────────────────────────────────
+MAX_CONVERSATION_HISTORY = 20
