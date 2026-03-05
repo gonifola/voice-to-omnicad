@@ -1,0 +1,13 @@
+# Voice to OmniCAD — Python dependencies (install OUTSIDE Blender)
+# pip install -r requirements.txt
+
+# Voice STT
+SpeechRecognition>=3.10.0
+pyaudio>=0.2.14         # mic access
+
+# Already in stdlib / Blender Python: bpy, math, mathutils, threading, tempfile
+
+# API server (run standalone, not inside Blender)
+flask>=3.0.0
+flask-cors>=4.0.0
+requests>=2.31.0
