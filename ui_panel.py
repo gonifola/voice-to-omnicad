@@ -1,4 +1,4 @@
-# UI Panel — Voice to OmniCAD v0.3.0
+# UI Panel — Voice to OmniCAD v0.4.0
 
 import bpy
 from . import voice_engine
@@ -9,15 +9,17 @@ from .sacred_geometry import (
     flower_of_life, metatrons_cube, platonic_solids,
     star_mother, stellated_compound,
     sri_yantra, merkaba, fibonacci_spiral, torus_knot,
+    # Haramein Suite
+    sixty_four_tetrahedron_grid, vector_equilibrium, isotropic_vector_matrix,
 )
 
 
-# ── State ────────────────────────────────────────────────────
+# ── State ─────────────────────────────────────────────────────────────────
 
 _voice_capture = None   # singleton VoiceCapture
 
 
-# ── Main Panel ───────────────────────────────────────────────
+# ── Main Panel ────────────────────────────────────────────────────────────
 
 class VOICECAD_PT_MainPanel(bpy.types.Panel):
     bl_label       = "Voice to OmniCAD"
@@ -31,21 +33,21 @@ class VOICECAD_PT_MainPanel(bpy.types.Panel):
         layout.label(text="Say it. Build it. Print it.", icon="SPEAKER")
         layout.separator()
 
-        # ── Voice Controls ───────────────────────────────────
+        # ── Voice Controls ───────────────────────────────────────────────
         box = layout.box()
         box.label(text="Voice Input (Whisper):", icon="REC")
         row = box.row(align=True)
         row.scale_y = 1.8
         row.operator("voicecad.start_listening", text="▶ Listen", icon="PLAY")
-        row.operator("voicecad.stop_listening",  text="■ Stop",   icon="SNAP_FACE")
+        row.operator("voicecad.stop_listening",  text="⏹ Stop",   icon="SNAP_FACE")
 
-        # ── Manual Command ───────────────────────────────────
+        # ── Manual Command ───────────────────────────────────────────────
         layout.separator()
         layout.label(text="Type a Command:")
         layout.prop(context.scene, "voicecad_manual_command", text="")
         layout.operator("voicecad.execute_command", text="Execute", icon="PLAY")
 
-        # ── AI Backend ───────────────────────────────────────
+        # ── AI Backend ───────────────────────────────────────────────────
         layout.separator()
         box = layout.box()
         box.label(text="AI Backend:", icon="SETTINGS")
@@ -55,7 +57,7 @@ class VOICECAD_PT_MainPanel(bpy.types.Panel):
         except Exception:
             box.label(text="  (check config.py)")
 
-        # ── Sacred Geometry ──────────────────────────────────
+        # ── Sacred Geometry ──────────────────────────────────────────────
         layout.separator()
         layout.label(text="Sacred Geometry:", icon="MESH_ICOSPHERE")
         col = layout.column(align=True)
@@ -64,27 +66,35 @@ class VOICECAD_PT_MainPanel(bpy.types.Panel):
         col.operator("voicecad.platonic_solids",    text="All Platonic Solids")
         col.separator()
         col.operator("voicecad.star_mother",        text="★ Star Mother")
-        col.operator("voicecad.stellated_compound", text="◆ Stellated Compound")
+        col.operator("voicecad.stellated_compound", text="✦ Stellated Compound")
         col.separator()
         col.operator("voicecad.sri_yantra",         text="✦ Sri Yantra")
         col.operator("voicecad.merkaba",            text="⬡ Merkaba")
-        col.operator("voicecad.fibonacci_spiral",   text="〜 Fibonacci Spiral")
+        col.operator("voicecad.fibonacci_spiral",   text="∜ Fibonacci Spiral")
         col.operator("voicecad.torus_knot",         text="∞ Torus Knot (3,2)")
 
-        # ── Material Presets ─────────────────────────────────
+        # ── Haramein Suite ───────────────────────────────────────────────
+        layout.separator()
+        layout.label(text="Haramein Suite:", icon="MESH_UVSPHERE")
+        col2 = layout.column(align=True)
+        col2.operator("voicecad.sixty_four_tetrahedron_grid", text="⬡ 64-Tetrahedron Grid")
+        col2.operator("voicecad.vector_equilibrium",          text="◎ Vector Equilibrium")
+        col2.operator("voicecad.isotropic_vector_matrix",     text="⬡ Isotropic Vector Matrix")
+
+        # ── Material Presets ─────────────────────────────────────────────
         layout.separator()
         layout.label(text="Materials:", icon="MATERIAL")
         row = layout.row(align=True)
-        row.operator("voicecad.mat_gold",     text="Gold")
+        row.operator("voicecad.mat_gold",    text="Gold")
         row.operator("voicecad.mat_crystal",  text="Crystal")
         row.operator("voicecad.mat_obsidian", text="Obsidian")
 
-        # ── Export ───────────────────────────────────────────
+        # ── Export ───────────────────────────────────────────────────────
         layout.separator()
         layout.operator("voicecad.export_stl", text="Export STL", icon="EXPORT")
 
 
-# ── Voice operators ──────────────────────────────────────────
+# ── Voice operators ───────────────────────────────────────────────────────
 
 class VOICECAD_OT_StartListening(bpy.types.Operator):
     bl_idname = "voicecad.start_listening"
@@ -95,7 +105,6 @@ class VOICECAD_OT_StartListening(bpy.types.Operator):
         _voice_capture = voice_engine.VoiceCapture()
 
         def on_transcript(text):
-            # Run command in main thread via timer
             context.scene.voicecad_manual_command = text
             bpy.ops.voicecad.execute_command("INVOKE_DEFAULT")
 
@@ -138,11 +147,11 @@ class VOICECAD_OT_ExecuteCommand(bpy.types.Operator):
         if result["success"]:
             self.report({"INFO"}, f"Done: {command[:60]}")
         else:
-            self.report({"ERROR"}, f"Error: {result.get('error','?')}[:120]")
+            self.report({"ERROR"}, f"Error: {result.get('error','?')[:120]}")
         return {"FINISHED"}
 
 
-# ── Sacred geometry operators ────────────────────────────────
+# ── Sacred geometry operators ──────────────────────────────────────────────
 
 class VOICECAD_OT_FlowerOfLife(bpy.types.Operator):
     bl_idname = "voicecad.flower_of_life"
@@ -210,7 +219,31 @@ class VOICECAD_OT_TorusKnot(bpy.types.Operator):
         return {"FINISHED"}
 
 
-# ── Material operators ────────────────────────────────────────
+# ── Haramein Suite operators ───────────────────────────────────────────────
+
+class VOICECAD_OT_SixtyFourTetrahedronGrid(bpy.types.Operator):
+    bl_idname = "voicecad.sixty_four_tetrahedron_grid"
+    bl_label  = "64-Tetrahedron Grid"
+    def execute(self, context):
+        sixty_four_tetrahedron_grid.create_sixty_four_tetrahedron_grid()
+        return {"FINISHED"}
+
+class VOICECAD_OT_VectorEquilibrium(bpy.types.Operator):
+    bl_idname = "voicecad.vector_equilibrium"
+    bl_label  = "Vector Equilibrium"
+    def execute(self, context):
+        vector_equilibrium.create_vector_equilibrium()
+        return {"FINISHED"}
+
+class VOICECAD_OT_IsotropicVectorMatrix(bpy.types.Operator):
+    bl_idname = "voicecad.isotropic_vector_matrix"
+    bl_label  = "Isotropic Vector Matrix"
+    def execute(self, context):
+        isotropic_vector_matrix.create_isotropic_vector_matrix()
+        return {"FINISHED"}
+
+
+# ── Material operators ─────────────────────────────────────────────────────
 
 class VOICECAD_OT_MatGold(bpy.types.Operator):
     bl_idname = "voicecad.mat_gold"
@@ -237,7 +270,7 @@ class VOICECAD_OT_MatObsidian(bpy.types.Operator):
         return {"FINISHED"}
 
 
-# ── Export ────────────────────────────────────────────────────
+# ── Export ─────────────────────────────────────────────────────────────────
 
 class VOICECAD_OT_ExportSTL(bpy.types.Operator):
     bl_idname = "voicecad.export_stl"
@@ -251,7 +284,7 @@ class VOICECAD_OT_ExportSTL(bpy.types.Operator):
         return {"FINISHED"}
 
 
-# ── Registration ─────────────────────────────────────────────
+# ── Registration ───────────────────────────────────────────────────────────
 
 CLASSES = [
     VOICECAD_PT_MainPanel,
@@ -267,6 +300,11 @@ CLASSES = [
     VOICECAD_OT_Merkaba,
     VOICECAD_OT_FibonacciSpiral,
     VOICECAD_OT_TorusKnot,
+    # Haramein Suite
+    VOICECAD_OT_SixtyFourTetrahedronGrid,
+    VOICECAD_OT_VectorEquilibrium,
+    VOICECAD_OT_IsotropicVectorMatrix,
+    # Materials
     VOICECAD_OT_MatGold,
     VOICECAD_OT_MatCrystal,
     VOICECAD_OT_MatObsidian,

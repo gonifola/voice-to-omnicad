@@ -1,14 +1,14 @@
-# Voice to OmniCAD — Blender Addon v0.3.0
+# Voice to OmniCAD — Blender Addon v0.4.0
 # "Say it. Build it. Print it."
 # Claude AI (primary) + Grok (fallback) → bpy code → 3D objects
 
 bl_info = {
     "name":        "Voice to OmniCAD",
     "author":      "williamjackson1111",
-    "version":     (0, 3, 0),
+    "version":     (0, 4, 0),
     "blender":     (4, 0, 0),
     "location":    "View3D > Sidebar > Voice CAD",
-    "description": "Voice + text → 3D sacred geometry + CAD. Powered by Claude AI + Grok.",
+    "description": "Voice + text → 3D sacred geometry + CAD. Powered by Claude AI + Grok. Haramein Suite included.",
     "category":    "3D View",
 }
 
@@ -24,7 +24,7 @@ from . import sacred_geometry
 
 def register():
     ui_panel.register()
-    print("[Voice to OmniCAD] v0.3.0 — Whisper STT + 9 geometry generators + materials + API")
+    print("[Voice to OmniCAD] v0.4.0 — Whisper STT + 12 geometry generators (Haramein Suite) + materials + API")
 
 
 def unregister():
